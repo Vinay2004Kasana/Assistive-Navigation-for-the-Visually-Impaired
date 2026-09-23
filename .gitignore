@@ -1,0 +1,27 @@
+# Ignore dataset folders (too large to commit)
+Indian Currency Dataset/
+Object detection Dataset/
+OCR Dataset/
+
+# Ignore generated training/output folders
+runs/
+weights/
+yolo_object_dataset/
+yolo_ocr_dataset/
+
+# Python artifacts
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+Indian Currency Dataset/
+Object detection Dataset/
+OCR Dataset/
+runs/
+weights/
+yolo_object_dataset/
+yolo_ocr_dataset/
