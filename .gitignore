@@ -25,3 +25,7 @@ runs/
 weights/
 yolo_object_dataset/
 yolo_ocr_dataset/
+
+# Large model checkpoints (>100MB GitHub limit)
+currency_models_balanced/best_currency_model.pth
+currency_models_balanced/currency_model.onnx.data

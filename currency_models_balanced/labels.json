@@ -1,0 +1,76 @@
+{
+  "class_names": [
+    "10",
+    "20",
+    "50",
+    "100",
+    "200",
+    "500",
+    "2000"
+  ],
+  "class_to_idx": {
+    "10": 0,
+    "20": 1,
+    "50": 2,
+    "100": 3,
+    "200": 4,
+    "500": 5,
+    "2000": 6
+  },
+  "mean": [
+    0.45,
+    0.45,
+    0.45
+  ],
+  "std": [
+    0.22,
+    0.22,
+    0.22
+  ],
+  "img_size": 224,
+  "confidence_threshold": 0.7,
+  "balanced_test_per_class": 30,
+  "engine": "two_stage_hybrid_ocr_vision",
+  "ocr_patterns": {
+    "2000": [
+      "(?:\\b|\u20b9|rs\\.?|r)2000\\b",
+      "\\b2ooo\\b",
+      "two\\s*thousand"
+    ],
+    "500": [
+      "(?:\\b|\u20b9|rs\\.?|r)500\\b",
+      "\\b5oo\\b",
+      "\\b5o0\\b",
+      "five\\s*hundred"
+    ],
+    "200": [
+      "(?:\\b|\u20b9|rs\\.?|r)200\\b",
+      "\\b2oo\\b",
+      "\\b2o0\\b",
+      "two\\s*hundred"
+    ],
+    "100": [
+      "(?:\\b|\u20b9|rs\\.?|r)100\\b",
+      "\\b1oo\\b",
+      "\\b1o0\\b",
+      "one\\s*hundred",
+      "hundred\\s*rupees"
+    ],
+    "50": [
+      "(?:\\b|\u20b9|rs\\.?|r)50\\b",
+      "\\b5o\\b",
+      "fifty\\s*rupees"
+    ],
+    "20": [
+      "(?:\\b|\u20b9|rs\\.?|r)20\\b",
+      "\\b2o\\b",
+      "twenty\\s*rupees"
+    ],
+    "10": [
+      "(?:\\b|\u20b9|rs\\.?|r)10\\b",
+      "\\b1o\\b",
+      "ten\\s*rupees"
+    ]
+  },
+  "backbone": "ConvNeXt-Tiny"
+}
