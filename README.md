@@ -29,9 +29,8 @@ The Object Detection module is responsible for identifying objects present in th
 
 **Files:**
 - `Object_detection model.ipynb`
-- `yolov8n.pt`
-- `best.onnx`
-- `best (1).onnx`
+- `yolov8n.pt`, `yolov8s.pt`, `yolov8m.pt`, `yolo11n.pt`
+- `pi_deploy/models/yolo_obstacles.onnx`
 
 **Purpose:**
 - Detect objects from camera/image input.
@@ -61,13 +60,14 @@ This module helps make printed and displayed textual information more accessible
 
 ### 3. Currency Recognition Model
 
-A dedicated currency recognition module is developed to recognize Indian currency notes and identify their denominations.
+A dedicated two-stage hybrid currency recognition module is developed to recognize Indian currency notes across 7 denominations (Rs. 10, 20, 50, 100, 200, 500, 2000) using orientation-aware OCR numeral spotting and a ConvNeXt-Tiny vision fallback.
 
 **Files:**
-- `Currency_model.ipynb`
-- `best_currency_model.pth`
-- `currency_model.onnx`
-- `currency_models/`
+- `Currency_model_balanced_7_denominations.ipynb`
+- `train_numeral_currency_model.py`
+- `test_hybrid_currency.py` (supports `--image <path>` and `--dataset-dir <dir>` CLI options)
+- `currency_models_balanced/`
+- `pi_deploy/models/currency_model.onnx`
 
 **Purpose:**
 - Detect Indian currency notes.
@@ -75,6 +75,32 @@ A dedicated currency recognition module is developed to recognize Indian currenc
 - Provide the recognized currency information to the user.
 
 The currency recognition capability is intended to assist users in identifying currency independently.
+
+---
+
+### 4. Familiar Person Recognition Model
+
+The Familiar Person Recognition module detects faces and matches them against locally enrolled contacts with consent-gated embeddings.
+
+**Technology:** MTCNN + InceptionResnetV1 (VGGFace2)
+
+**Files:**
+- `VisuNav_Familiar_Person_Recognition.ipynb`
+- `run_familiar_person_recognition.py`
+- `private_face_db/contacts.json`
+- `pi_deploy/models/facenet_inception_resnet_v1.onnx`
+
+**Purpose:**
+- Detect faces and validate image quality (size and blur checks).
+- Match faces against enrolled contacts using cosine similarity.
+- Support ONNX Runtime inference for edge deployment.
+
+---
+
+### 5. Edge Deployment & Evaluation
+
+- `pi_deploy/pi_assistive_nav.py` — Unified edge deployment entrypoint with ONNX models in `pi_deploy/models/`.
+- `MODEL_EVALUATION_RESULTS.md` — Model evaluation metrics and test summaries.
 
 ---
 
@@ -135,3 +161,4 @@ The overall system follows a **Perception → Processing → Decision → Feedba
                     │  Environmental      │
                     │     Awareness       │
                     └─────────────────────┘
+```
