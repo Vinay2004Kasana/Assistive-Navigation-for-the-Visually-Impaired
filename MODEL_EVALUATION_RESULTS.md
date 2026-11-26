@@ -14,6 +14,8 @@ The assistive navigation ecosystem consists of three dedicated deep learning sub
 | **1. Currency Recognition** | `MobileNetV3-Large` + Custom Classifier Head | Banknote Denomination (₹10–₹2000) | Indian Currency Dataset (1,786 images) | **100.0% Top-1 Accuracy** (F1: 1.000) | **2.1 ms** (476 FPS) / **1.8 ms** (555 FPS) | ⚡ Ultra Real-Time |
 | **2. Scene Text / OCR** | `YOLOv8n-Text` (1024px) + CRNN/EasyOCR | Signboards, Hazards, Wayfinding Text | Indian Scene Text (1,200 YOLO images / 2,920 labels) | **mAP@50: 58.83%** (Val P: 71.33%) | **3.7 ms** (270 FPS) / **3.1 ms** (322 FPS) | ⚡ Ultra Real-Time |
 | **3. Assistive Object Detection** | `YOLO11n-AssistiveNav` (640px) | Obstacles, Vehicles, Pedestrians, Infrastructure | Multi-Condition Dataset (2,850 images, 20 classes) | **mAP@50: 31.49%** (Val P: 55.53%) | **1.8 ms** (555 FPS) / **1.5 ms** (667 FPS) | ⚡ Ultra Real-Time |
+| **4. Face recognition model** | `Multi-task Cascaded Convolutional Networks (MTCNN).v` (640px) | Pre-trained InceptionResnetV1 (VGGFace2) producing normalized 512-dimensional embeddings. | **mAP@50: 31.49%** (Val P: 55.53%) | **1.8 ms** (555 FPS) / **1.5 ms** (667 FPS) | ⚡ Ultra Real-Time |
+
 
 ---
 
