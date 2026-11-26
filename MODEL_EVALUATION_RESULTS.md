@@ -217,3 +217,16 @@ All three models have been benchmarked for edge deployment on single-board compu
 
 ---
 *Report generated and validated automatically from repository artifacts and model checkpoints.*
+
+## 4. 🚶‍♂️ Model 4: Facial recognition model
+
+The Facial Recognition Module is proposed to identify and recognize known individuals using facial information captured through the camera. This feature aims to help visually impaired users become aware of familiar people in their surroundings by providing appropriate audio feedback.
+Working Principle:
+The facial recognition process consists of the following stages:
+1.	Face Detection: The camera captures the surrounding environment, and the system detects whether one or more human faces are present in the captured image.
+2.	Face Pre-processing: The detected facial region is extracted and prepared for further analysis through resizing and normalization.
+3.	Feature Extraction: The facial recognition algorithm extracts distinctive facial features from the detected face.
+4.	Face Matching: The extracted features are compared with previously enrolled and authorized facial data stored in the system.
+5.	Recognition Output: If a sufficiently reliable match is found, the system identifies the registered individual. Otherwise, the person is treated as unknown.
+6.	Audio Feedback: The system can communicate the recognition result through the connected open-ear or bone-conduction Bluetooth earphones.
+
