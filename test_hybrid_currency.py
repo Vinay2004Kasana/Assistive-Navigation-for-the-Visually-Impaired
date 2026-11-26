@@ -8,7 +8,9 @@ import sys
 import os
 import re
 import json
+import argparse
 from pathlib import Path
+from typing import Optional, Tuple, Union
 from PIL import Image
 import numpy as np
 import torch
@@ -17,7 +19,8 @@ import torchvision.transforms as transforms
 import torch.nn as nn
 import easyocr
 
-sys.stdout.reconfigure(encoding='utf-8')
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {DEVICE}")
@@ -80,7 +83,8 @@ eval_tf = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
-def spot_numerals(pil_image):
+def spot_numerals(pil_image: Image.Image) -> Tuple[Optional[str], Optional[str], str]:
+    """Scan the banknote image across orientations to spot printed denomination numerals."""
     w, h = pil_image.size
     rotations = [270, 90, 0, 180] if h > w else [0, 180, 270, 90]
     
@@ -95,9 +99,14 @@ def spot_numerals(pil_image):
                     return denom, pattern, full_text
     return None, None, ""
 
-def predict_currency_hybrid(image_path_or_pil):
+def predict_currency_hybrid(image_path_or_pil: Union[str, Path, Image.Image]) -> dict:
+    """Run two-stage OCR + vision currency classification and return a structured result."""
     if isinstance(image_path_or_pil, (str, Path)):
-        img = Image.open(image_path_or_pil).convert("RGB")
+        img_path = Path(image_path_or_pil)
+        if not img_path.is_file():
+            raise FileNotFoundError(f"Currency image not found: {img_path}")
+        with Image.open(img_path) as opened:
+            img = opened.convert("RGB")
     else:
         img = image_path_or_pil.convert("RGB")
         
@@ -145,10 +154,26 @@ def predict_currency_hybrid(image_path_or_pil):
     }
 
 if __name__ == "__main__":
-    for d in ["200", "50", "10", "100"]:
-        test_files = list(Path(f"Indian Currency Dataset/{d}").glob("*.jpg"))
-        if test_files:
-            print(f"\n==========================================")
-            print(f"Testing True Rs.{d} Note ({test_files[0].name})")
-            res = predict_currency_hybrid(test_files[0])
-            print(json.dumps(res, indent=2))
+    parser = argparse.ArgumentParser(
+        description="Run hybrid OCR + vision currency recognition on an image or sample dataset."
+    )
+    parser.add_argument("--image", type=Path, help="Path to a single banknote image to classify.")
+    parser.add_argument(
+        "--dataset-dir",
+        type=Path,
+        default=Path("Indian Currency Dataset"),
+        help="Root dataset directory with denomination subfolders (default: Indian Currency Dataset).",
+    )
+    args = parser.parse_args()
+
+    if args.image:
+        res = predict_currency_hybrid(args.image)
+        print(json.dumps(res, indent=2))
+    else:
+        for d in ["200", "50", "10", "100"]:
+            test_files = list((args.dataset_dir / d).glob("*.jpg"))
+            if test_files:
+                print(f"\n==========================================")
+                print(f"Testing True Rs.{d} Note ({test_files[0].name})")
+                res = predict_currency_hybrid(test_files[0])
+                print(json.dumps(res, indent=2))
