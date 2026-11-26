@@ -4,7 +4,6 @@ Architecture: ConvNeXt-Tiny (Pretrained) with Grayscale & High-Contrast Numeral 
 """
 
 import os
-import sys
 import json
 import hashlib
 from pathlib import Path
@@ -13,15 +12,13 @@ from collections import Counter
 import numpy as np
 import pandas as pd
 from PIL import Image
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
 import torchvision.models as models
 import torchvision.transforms as transforms
-from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, classification_report, confusion_matrix
+from sklearn.metrics import accuracy_score, f1_score, classification_report
 
 # 1. Config
 DATASET_ROOT = Path("Indian Currency Dataset")
@@ -45,9 +42,14 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using compute device: {DEVICE}")
 
 # 2. Audit & Deduplication
+if not DATASET_ROOT.is_dir():
+    raise FileNotFoundError(f"Dataset directory not found: {DATASET_ROOT}")
+
 records = []
 for class_name in CLASS_NAMES:
     folder = DATASET_ROOT / class_name
+    if not folder.is_dir():
+        continue
     for path in folder.rglob("*"):
         if path.suffix.lower() not in IMAGE_EXTENSIONS:
             continue
@@ -63,6 +65,9 @@ for class_name in CLASS_NAMES:
             })
         except Exception:
             continue
+
+if not records:
+    raise RuntimeError(f"No valid currency images found under {DATASET_ROOT}")
 
 df = pd.DataFrame(records).drop_duplicates(subset="sha256", keep="first").reset_index(drop=True)
 print(f"Total clean images: {len(df)}")
@@ -131,7 +136,8 @@ val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE*2, shuffle=False, num
 test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE*2, shuffle=False, num_workers=workers)
 
 # 5. Model
-def build_model(num_classes=7):
+def build_model(num_classes: int = 7) -> nn.Module:
+    """Build a ConvNeXt-Tiny classifier adapted for currency denominations."""
     model = models.convnext_tiny(weights=models.ConvNeXt_Tiny_Weights.DEFAULT)
     in_features = model.classifier[2].in_features
     model.classifier[2] = nn.Sequential(
