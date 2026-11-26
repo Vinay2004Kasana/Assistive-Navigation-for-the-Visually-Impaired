@@ -162,3 +162,39 @@ The overall system follows a **Perception → Processing → Decision → Feedba
                     │     Awareness       │
                     └─────────────────────┘
 ```
+
+---
+
+## 🛠️ Setup & Usage
+
+### 1. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Hybrid Currency Recognition
+Run against the default dataset samples:
+```bash
+python test_hybrid_currency.py
+```
+
+Or test a single banknote image:
+```bash
+python test_hybrid_currency.py --image path/to/note.jpg
+```
+
+### 3. Familiar Person Recognition
+Run the full enrollment + PyTorch + ONNX Runtime pipeline:
+```bash
+python run_familiar_person_recognition.py
+```
+
+Skip ONNX export or enrollment when running inference again:
+```bash
+python run_familiar_person_recognition.py --skip-export --skip-enroll
+```
+
+### 4. Train Balanced Currency Model
+```bash
+python train_numeral_currency_model.py
+```
